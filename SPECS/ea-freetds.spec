@@ -43,7 +43,7 @@ to install %{name}-devel.
         --datadir=/opt/cpanel/freetds \
         --bindir=/opt/cpanel/freetds/bin \
         --mandir=/opt/cpanel/freetds/man \
-        --libdir=/opt/cpanel/freetds/lib \
+        --libdir=/opt/cpanel/freetds/%{_lib} \
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
 	--with-tdsver=8.0 \
