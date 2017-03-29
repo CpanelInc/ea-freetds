@@ -1,15 +1,18 @@
 
-Name: freetds
+Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 0.91
+# Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
+Vendor: cPanel, Inc.
 Group: System Environment/Libraries
-Vendor: cPanel, Inc
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Source0: ftp://ftp.freetds.org/pub/freetds/stable/freetds-stable.tgz
+
+# From ftp://ftp.freetds.org/pub/freetds/stable/freetds-stable.tgz
+Source0: freetds-stable.tgz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -31,12 +34,18 @@ to install %{name}-devel.
 
 
 %prep 
-%setup -q
+%setup -q -n freetds-%{version}
 
 %build 
 
 %configure \
-	--prefix=/usr/local/freetds \
+	--prefix=/opt/cpanel/freetds \
+        --datadir=/opt/cpanel/freetds \
+        --bindir=/opt/cpanel/freetds/bin \
+        --mandir=/opt/cpanel/freetds/man \
+        --libdir=/opt/cpanel/freetds/%{_lib} \
+        --includedir=/opt/cpanel/freetds/include \
+        --sysconfdir=/opt/cpanel/freetds/etc \
 	--with-tdsver=8.0 \
 	--enable-msdblib \
 	--enable-dbmfix \
@@ -46,6 +55,7 @@ make
  
 %install 
 rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/opt/cpanel/freetds
 make install DESTDIR=$RPM_BUILD_ROOT
 
 %clean 
@@ -53,22 +63,13 @@ rm -rf $RPM_BUILD_ROOT
  
 %files 
 %defattr(-, root, root, -) 
-%{_bindir}/*
-%{_libdir}/*.so.*
-%{_libdir}/libct.*
-%{_libdir}/libsybdb.*
-%config(noreplace) %{_sysconfdir}/*.conf
-%doc AUTHORS BUGS COPYING* NEWS README TODO doc/*.html
-%doc doc/doc/freetds-%{version}/userguide doc/images
-%{_mandir}/*/*
-
+/opt/cpanel/freetds
+%config(noreplace) /opt/cpanel/freetds/etc/*.conf
  
 %files devel 
 %defattr (-, root, root, -) 
-%doc samples
-%{?_with_static: %{_libdir}/*.a}
-%{_libdir}/*.so
-%{_includedir}/*
+/opt/cpanel/freetds/include
 
 %changelog
-
+* Fri Mar 24 2017 Dan Muey <dan@cpanel.net> - 0.91-1
+- EA-6030: EA4-ify the initial POC
