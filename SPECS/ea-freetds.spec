@@ -3,17 +3,17 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 0.91
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 # From ftp://ftp.freetds.org/pub/freetds/stable/freetds-stable.tgz
 Source0: freetds-stable.tgz
 
+Autoprov: 0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description 
@@ -71,5 +71,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Sun Apr  9 2017 Eugene Zamriy <eugene@zamriy.info> - 0.91-2
+- Disabled automatic Provides generation to avoid conflicts with EPEL package
+- Removed duplicate BuildRoot definition
+
 * Fri Mar 24 2017 Dan Muey <dan@cpanel.net> - 0.91-1
 - EA-6030: EA4-ify the initial POC
