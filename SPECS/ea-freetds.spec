@@ -13,6 +13,7 @@ URL: http://www.freetds.org/2
 # From ftp://ftp.freetds.org/pub/freetds/stable/freetds-stable.tgz
 Source0: freetds-stable.tgz
 
+Autoreq: 0
 Autoprov: 0
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -72,7 +73,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Sun Apr  9 2017 Eugene Zamriy <eugene@zamriy.info> - 0.91-2
-- Disabled automatic Provides generation to avoid conflicts with EPEL package
+- Disabled automatic Provides / Requires generation to avoid conflicts with EPEL
+  package
 - Removed duplicate BuildRoot definition
 
 * Fri Mar 24 2017 Dan Muey <dan@cpanel.net> - 0.91-1
