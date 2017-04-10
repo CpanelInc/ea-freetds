@@ -1,7 +1,7 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 0.91
+Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -11,8 +11,8 @@ License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-# From ftp://ftp.freetds.org/pub/freetds/stable/freetds-stable.tgz
-Source0: freetds-stable.tgz
+# From ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
+Source0: freetds-patched.tar.gz
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -46,7 +46,6 @@ to install %{name}-devel.
         --libdir=/opt/cpanel/freetds/%{_lib} \
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
-	--with-tdsver=8.0 \
 	--enable-msdblib \
 	--enable-dbmfix \
 	--with-gnu-ld
@@ -71,5 +70,8 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Wed Apr 05 2017 Dan Muey <dan@cpanel.net> - 1.00.27-1
+- EA-6137: Update ea-freetds from 0.91 to 1.0
+
 * Fri Mar 24 2017 Dan Muey <dan@cpanel.net> - 0.91-1
 - EA-6030: EA4-ify the initial POC
