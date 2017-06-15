@@ -3,7 +3,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -15,6 +15,12 @@ Source0: freetds-patched.tar.gz
 
 Autoreq: 0
 Autoprov: 0
+%if %{__isa_bits} == 64
+Provides: libsybdb.so.5()(64bit)
+%else
+Provides: libsybdb.so.5
+%endif
+
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %description 
@@ -71,6 +77,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Wed Jun 14 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 1.00.27-3
+- Add libsybdb provides
+
 * Sun Apr 09 2017 Eugene Zamriy <eugene@zamriy.info> - 1.00.27-2
 - Disabled automatic Provides / Requires generation to avoid conflicts with EPEL package
 - Removed duplicate BuildRoot definition
