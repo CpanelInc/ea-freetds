@@ -3,7 +3,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 3
+%define release_prefix 5
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -20,6 +20,8 @@ Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
+BuildRequires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
+Requires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -55,7 +57,8 @@ to install %{name}-devel.
         --sysconfdir=/opt/cpanel/freetds/etc \
 	--enable-msdblib \
 	--enable-dbmfix \
-	--with-gnu-ld
+	--with-gnu-ld \
+        --with-gnutls
 
 make
  
@@ -77,6 +80,12 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Tue Oct 03 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
+- EA-4653: Add requires that PHP 5.x needs
+
+* Thu Sep 21 2017 Dan MUey <dan@cpanel.net> - 1.00.27-4
+- EA-6612: Enable TLS
+
 * Wed Jun 14 2017 Jacob Perkins <jacob.perkins@cpanel.net> - 1.00.27-3
 - Add libsybdb provides
 
