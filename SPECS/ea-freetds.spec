@@ -13,15 +13,13 @@ URL: http://www.freetds.org/2
 # From ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
 Source0: freetds-patched.tar.gz
 
-Autoreq: 0
-Autoprov: 0
 %if %{__isa_bits} == 64
 Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
-BuildRequires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
-Requires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
+BuildRequires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
+Requires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -58,7 +56,7 @@ to install %{name}-devel.
 	--enable-msdblib \
 	--enable-dbmfix \
 	--with-gnu-ld \
-        --with-gnutls
+    --with-openssl-dir=/opt/cpanel/ea-openssl \
 
 make
  
