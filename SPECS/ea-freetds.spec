@@ -3,7 +3,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 5
+%define release_prefix 6
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -45,6 +45,12 @@ to install %{name}-devel.
 
 %build 
 
+
+export OPENSSL_CFLAGS="-I/opt/cpanel/ea-openssl/include"
+export OPENSSL_LIBS="-L/opt/cpanel/ea-openssl/lib -lssl -lcrypto"
+export LDFLAGS="-L$LIBDIR/lib -ldl"
+
+
 %configure \
 	--prefix=/opt/cpanel/freetds \
         --datadir=/opt/cpanel/freetds \
@@ -53,10 +59,9 @@ to install %{name}-devel.
         --libdir=/opt/cpanel/freetds/%{_lib} \
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
-	--enable-msdblib \
-	--enable-dbmfix \
-	--with-gnu-ld \
-    --with-openssl-dir=/opt/cpanel/ea-openssl \
+        --enable-msdblib \
+	    --with-gnu-ld \
+        --with-openssl=/opt/cpanel/ea-openssl \
 
 make
  
@@ -78,6 +83,10 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
+- EA-6911: FreeTDS not building on CentOS 7
+- Now building against OpenSSL
+
 * Tue Oct 03 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
 - EA-4653: Add requires that PHP 5.x needs
 
