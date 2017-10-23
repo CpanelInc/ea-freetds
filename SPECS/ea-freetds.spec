@@ -3,7 +3,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 5
+%define release_prefix 6
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -13,15 +13,13 @@ URL: http://www.freetds.org/2
 # From ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
 Source0: freetds-patched.tar.gz
 
-Autoreq: 0
-Autoprov: 0
 %if %{__isa_bits} == 64
 Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
-BuildRequires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
-Requires: gnutls gnutls-devel libtasn1 libtasn1-devel nettle nettle-devel
+BuildRequires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
+Requires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -47,6 +45,12 @@ to install %{name}-devel.
 
 %build 
 
+
+export OPENSSL_CFLAGS="-I/opt/cpanel/ea-openssl/include"
+export OPENSSL_LIBS="-L/opt/cpanel/ea-openssl/lib -lssl -lcrypto"
+export LDFLAGS="-L$LIBDIR/lib -ldl"
+
+
 %configure \
 	--prefix=/opt/cpanel/freetds \
         --datadir=/opt/cpanel/freetds \
@@ -55,10 +59,9 @@ to install %{name}-devel.
         --libdir=/opt/cpanel/freetds/%{_lib} \
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
-	--enable-msdblib \
-	--enable-dbmfix \
-	--with-gnu-ld \
-        --with-gnutls
+        --enable-msdblib \
+	    --with-gnu-ld \
+        --with-openssl=/opt/cpanel/ea-openssl \
 
 make
  
@@ -80,6 +83,10 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
+- EA-6911: FreeTDS not building on CentOS 7
+- Now building against OpenSSL
+
 * Tue Oct 03 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
 - EA-4653: Add requires that PHP 5.x needs
 
