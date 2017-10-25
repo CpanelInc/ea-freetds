@@ -83,7 +83,7 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
-* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
+* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-6
 - EA-6911: FreeTDS not building on CentOS 7
 - Now building against OpenSSL
 
