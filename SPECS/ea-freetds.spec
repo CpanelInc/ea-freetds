@@ -1,5 +1,4 @@
-
-Name: ea-freetds
+me: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
@@ -18,12 +17,12 @@ Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
-BuildRequires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
-Requires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel 
+BuildRequires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel
+Requires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-%description 
+%description
 FreeTDS is a project to document and implement the TDS (Tabular
 DataStream) protocol. TDS is used by Sybase(TM) and Microsoft(TM) for
 client to database server communications. FreeTDS includes call
@@ -40,10 +39,10 @@ for %{name}. If you like to develop programs using %{name}, you will need
 to install %{name}-devel.
 
 
-%prep 
+%prep
 %setup -q -n freetds-%{version}
 
-%build 
+%build
 
 
 export OPENSSL_CFLAGS="-I/opt/cpanel/ea-openssl/include"
@@ -52,7 +51,7 @@ export LDFLAGS="-L$LIBDIR/lib -ldl"
 
 
 %configure \
-	--prefix=/opt/cpanel/freetds \
+        --prefix=/opt/cpanel/freetds \
         --datadir=/opt/cpanel/freetds \
         --bindir=/opt/cpanel/freetds/bin \
         --mandir=/opt/cpanel/freetds/man \
@@ -60,30 +59,34 @@ export LDFLAGS="-L$LIBDIR/lib -ldl"
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
         --enable-msdblib \
-	    --with-gnu-ld \
+        --with-gnu-ld \
         --with-openssl=/opt/cpanel/ea-openssl \
 
 make
- 
-%install 
+
+%install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/cpanel/freetds
 make install DESTDIR=$RPM_BUILD_ROOT
 
-%clean 
+%clean
 rm -rf $RPM_BUILD_ROOT
- 
-%files 
-%defattr(-, root, root, -) 
+
+%files
+%defattr(-, root, root, -)
 /opt/cpanel/freetds
 %config(noreplace) /opt/cpanel/freetds/etc/*.conf
- 
-%files devel 
-%defattr (-, root, root, -) 
+
+%files devel
+%defattr (-, root, root, -)
 /opt/cpanel/freetds/include
 
 %changelog
-* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-6
+* Sat Oct 28 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-6
+- EA-6943: SPEC file whitespace and tab clean up
+- Reporter: https://github.com/dkasyanov
+
+* Mon Oct 23 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-5
 - EA-6911: FreeTDS not building on CentOS 7
 - Now building against OpenSSL
 
