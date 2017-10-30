@@ -1,4 +1,4 @@
-me: ea-freetds
+Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
