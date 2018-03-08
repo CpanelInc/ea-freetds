@@ -2,7 +2,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 6
+%define release_prefix 7
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -44,12 +44,6 @@ to install %{name}-devel.
 
 %build
 
-
-export OPENSSL_CFLAGS="-I/opt/cpanel/ea-openssl/include"
-export OPENSSL_LIBS="-L/opt/cpanel/ea-openssl/lib -lssl -lcrypto"
-export LDFLAGS="-L$LIBDIR/lib -ldl"
-
-
 %configure \
         --prefix=/opt/cpanel/freetds \
         --datadir=/opt/cpanel/freetds \
@@ -82,6 +76,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Mon Mar 05 2018 Daniel Muey <dan@cpanel.net> - 1.00.27-7
+- ZC-3476: Update for ea-openssl shared object
+
 * Sat Oct 28 2017 Cory McIntire <cory@cpanel.net> - 1.00.27-6
 - EA-6943: SPEC file whitespace and tab clean up
 - Reporter: https://github.com/dkasyanov
