@@ -1,8 +1,10 @@
+%define ea_openssl_ver 1.0.2n-3
+
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.00.27
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 7
+%define release_prefix 8
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -17,8 +19,8 @@ Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
-BuildRequires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel
-Requires: ea-openssl ea-openssl-devel libtasn1 libtasn1-devel
+BuildRequires: ea-openssl >= %{ea_openssl_ver}, ea-openssl-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
+Requires: ea-openssl >= %{ea_openssl_ver}, ea-openssl-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -55,6 +57,7 @@ to install %{name}-devel.
         --enable-msdblib \
         --with-gnu-ld \
         --with-openssl=/opt/cpanel/ea-openssl \
+        LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl/%{_lib}"
 
 make
 
@@ -76,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Mon Mar 20 2018 Cory McIntire <cory@cpanel.net> - 1.00.27-8
+- ZC-3552: Added versioning to ea-openssl requirements.
+
 * Mon Mar 05 2018 Daniel Muey <dan@cpanel.net> - 1.00.27-7
 - ZC-3476: Update for ea-openssl shared object
 
