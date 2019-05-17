@@ -1,0 +1,63 @@
+#!/usr/local/cpanel/3rdparty/bin/perl
+# cpanel - find-latest-version                  Copyright(c) 2019 cPanel, L.L.C.
+#                                                           All rights Reserved.
+# copyright@cpanel.net                                         http://cpanel.net
+# This code is subject to the cPanel license. Unauthorized copying is prohibited
+#
+# This provides incremental updates to existing packages in EasyApache4.
+package ea_freetds::find_latest_version;
+
+use strict;
+use warnings;
+
+use lib "../ea-tools/lib/ea4_tool";    # assumes ea-tools is checked out next to this repo
+use ea4_tool::util ();
+
+unless ( caller() ) {
+    ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum );
+}
+
+###############
+#### helpers ##
+###############
+
+sub _get_required {
+    my ($http) = @_;
+
+    my $res = $http->get("https://www.freetds.org/files/stable/");
+    if ( !$res->{success} ) {
+        die "Could not GET freetds dist page ($res->{status} $res->{reason})\n";
+    }
+
+    my @freetds = sort { $b <=> $a } ( $res->{content} =~ m{href="freetds-1\.([0-9]+\.[0-9]+)\.tar\.gz"}g );
+    if ( !@freetds ) {
+        die "Could not find freetds versions\n";
+    }
+
+    my $version = "1\.$freetds[0]";
+    my $name    = "freetds-$version.tar.gz";
+    my $url     = "https://www.freetds.org/files/stable/$name";
+
+    return ( $version, $url, $name );
+}
+
+sub _add_sum {
+    my ( $http, $hr ) = @_;
+
+    my $checksum_url = "https://www.freetds.org/files/stable/freetds-$hr->{version}.tar.gz.md5";
+    my $res          = $http->get($checksum_url);
+    if ( !$res->{success} ) {
+        die "Could not GET freetds SHASUMS page ($res->{status} $res->{reason})\n";
+    }
+
+    my $name     = $hr->{tarball}{name};
+    my $checksum = ( $res->{content} =~ m/^MD5.*=\s*([0-9a-f]+)$/m )[0];
+    unless ($checksum) {
+        die "No checksum for $name at $checksum_url:\nContent: $res->{content}\n";
+    }
+
+    $hr->{tarball}{sum}{hex}  = $checksum;
+    $hr->{tarball}{sum}{type} = "md5";
+
+    return;
+}
