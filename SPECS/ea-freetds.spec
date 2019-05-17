@@ -2,17 +2,17 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.00.27
+Version: 1.1.6
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 9
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
 
-# From ftp://ftp.freetds.org/pub/freetds/stable/freetds-patched.tar.gz
-Source0: freetds-patched.tar.gz
+# From https://www.freetds.org/files/stable/freetds-1.1.6.tar.gz
+Source0: freetds-1.1.6.tar.gz
 
 %if %{__isa_bits} == 64
 Provides: libsybdb.so.5()(64bit)
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Fri May 17 2019 Cory McIntire <cory@cpanel.net> - 1.1.6-1
+- EA-8462: Updated to version 1.1.6
+
 * Mon Apr 16 2018 Rishwanth Yeddula <rish@cpanel.net> - 1.00.27-9
 - EA-7382: Update dependency on ea-openssl to require the latest version with versioned symbols.
 
