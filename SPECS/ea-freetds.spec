@@ -1,10 +1,10 @@
-%define ea_openssl_ver 1.0.2o-2
+%define ea_openssl_ver 1.1.1d-1
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.1.6
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -79,6 +79,9 @@ rm -rf $RPM_BUILD_ROOT
 /opt/cpanel/freetds/include
 
 %changelog
+* Tue Sep 24 2019 Daniel Muey <dan@cpanel.net> - 1.1.6-2
+- ZC-4361: Update ea-openssl requirement to v1.1.1 (ZC-5583)
+
 * Fri May 17 2019 Cory McIntire <cory@cpanel.net> - 1.1.6-1
 - EA-8462: Updated to version 1.1.6
 
