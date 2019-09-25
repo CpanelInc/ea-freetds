@@ -19,8 +19,8 @@ Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
-BuildRequires: ea-openssl >= %{ea_openssl_ver}, ea-openssl-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
-Requires: ea-openssl >= %{ea_openssl_ver}, ea-openssl-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
+BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
+Requires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -56,8 +56,8 @@ to install %{name}-devel.
         --sysconfdir=/opt/cpanel/freetds/etc \
         --enable-msdblib \
         --with-gnu-ld \
-        --with-openssl=/opt/cpanel/ea-openssl \
-        LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl/%{_lib}"
+        --with-openssl=/opt/cpanel/ea-openssl11 \
+        LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib}"
 
 make
 
