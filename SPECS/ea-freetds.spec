@@ -2,25 +2,35 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.1.6
+Version: 1.1.24
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 2
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
 
-# From https://www.freetds.org/files/stable/freetds-1.1.6.tar.gz
-Source0: freetds-1.1.6.tar.gz
+# do not produce debuginfo package
+%define debug_package %{nil}
+
+%define _docdir /opt/cpanel/freetds/share/doc/freetds
+
+# From https://www.freetds.org/files/stable/freetds-%{version}.tar.gz
+Source0: freetds-%{version}.tar.gz
 
 %if %{__isa_bits} == 64
 Provides: libsybdb.so.5()(64bit)
 %else
 Provides: libsybdb.so.5
 %endif
+BuildRequires: unixODBC-devel, readline-devel
+BuildRequires: libtool
+BuildRequires: doxygen, docbook-style-dsssl
 BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 Requires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
+
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -30,15 +40,38 @@ DataStream) protocol. TDS is used by Sybase(TM) and Microsoft(TM) for
 client to database server communications. FreeTDS includes call
 level interfaces for DB-Lib, CT-Lib, and ODBC.
 
+
+%package libs
+Summary: Libraries for %{name}
+Requires: %{name} = %{version}-%{release}
+
+%description libs
+FreeTDS is a project to document and implement the TDS (Tabular
+DataStream) protocol. TDS is used by Sybase(TM) and Microsoft(TM) for
+client to database server communications. FreeTDS includes call
+level interfaces for DB-Lib, CT-Lib, and ODBC.
+This package contains the libraries for %{name}.
+
+
 %package devel
 Summary: Header files and development libraries for %{name}
 Group: Development/Libraries
-Requires: %{name} = %{version}-%{release}
+Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
 %description devel
 This package contains the header files and development libraries
 for %{name}. If you like to develop programs using %{name}, you will need
 to install %{name}-devel.
+
+
+%package doc
+Summary: Development documentation for %{name}
+BuildArch: noarch
+
+%description doc
+This package contains the development documentation for %{name}.
+If you like to develop programs using %{name}, you will need to install
+%{name}-doc.
 
 
 %prep
@@ -51,34 +84,76 @@ to install %{name}-devel.
         --datadir=/opt/cpanel/freetds \
         --bindir=/opt/cpanel/freetds/bin \
         --mandir=/opt/cpanel/freetds/man \
+        --docdir=/opt/cpanel/freetds/share/doc/freetds \
         --libdir=/opt/cpanel/freetds/%{_lib} \
         --includedir=/opt/cpanel/freetds/include \
         --sysconfdir=/opt/cpanel/freetds/etc \
         --enable-msdblib \
         --with-gnu-ld \
+	--with-unixodbc="%{_prefix}" \
         --with-openssl=/opt/cpanel/ea-openssl11 \
         LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib}"
 
-make
+make %{?_smp_mflags} DOCBOOK_DSL="`rpm -ql docbook-style-dsssl | fgrep html/docbook.dsl`"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 mkdir -p $RPM_BUILD_ROOT/opt/cpanel/freetds
 make install DESTDIR=$RPM_BUILD_ROOT
 
+rm -f $RPM_BUILD_ROOT/opt/cpanel/freetds/%{_lib}/*.a
+rm -f $RPM_BUILD_ROOT/opt/cpanel/freetds/%{_lib}/*.la
+chmod -x $RPM_BUILD_ROOT/opt/cpanel/freetds/etc/*
+
+rm -f samples/Makefile* samples/*.in samples/README
+
+mkdir samples-odbc
+mv -f samples/*odbc* samples-odbc
+
+#  deinstall it for our own way...
+#mv -f $RPM_BUILD_ROOT/opt/cpanel/freetds/doc/freetds docdir
+#find docdir -type f -print0 | xargs -0 chmod -x
+
+
+%post libs -p /sbin/ldconfig
+
+%postun libs -p /sbin/ldconfig
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(-, root, root, -)
-/opt/cpanel/freetds
+/opt/cpanel/freetds/bin/*
+%doc AUTHORS BUGS COPYING NEWS README TODO doc/*.html
+%doc %{_docdir}/userguide
+%doc %{_docdir}/images
+/opt/cpanel/freetds/man/man1/*
+
+
+%files libs
+%doc COPYING.LIB
+/opt/cpanel/freetds/%{_lib}/*.so.*
+/opt/cpanel/freetds/%{_lib}/libtdsodbc.so
+%doc samples-odbc
 %config(noreplace) /opt/cpanel/freetds/etc/*.conf
+/opt/cpanel/freetds/man/man5/*
+
 
 %files devel
-%defattr (-, root, root, -)
-/opt/cpanel/freetds/include
+%doc samples
+/opt/cpanel/freetds/%{_lib}/*.so
+%exclude /opt/cpanel/freetds/%{_lib}/libtdsodbc.so
+/opt/cpanel/freetds/include/*
+
+
+%files doc
+%doc %{_docdir}/reference
+
 
 %changelog
+* Wed Jan 22 2020 Tim Mullin <tim@cpanel.net> - 1.1.24-1
+- EA-8839: Update to version 1.1.24 and make libtdsodbc.so available
+
 * Tue Sep 24 2019 Daniel Muey <dan@cpanel.net> - 1.1.6-2
 - ZC-4361: Update ea-openssl requirement to v1.1.1 (ZC-5583)
 
