@@ -2,7 +2,7 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.1.24
+Version: 1.2.3
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -124,14 +124,14 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /opt/cpanel/freetds/bin/*
-%doc AUTHORS BUGS COPYING NEWS README TODO doc/*.html
+%doc AUTHORS.md BUGS.md COPYING.txt NEWS.md README.md TODO.md doc/*.html
 %doc %{_docdir}/userguide
 %doc %{_docdir}/images
 /opt/cpanel/freetds/man/man1/*
 
 
 %files libs
-%doc COPYING.LIB
+%doc COPYING_LIB.txt
 /opt/cpanel/freetds/%{_lib}/*.so.*
 /opt/cpanel/freetds/%{_lib}/libtdsodbc.so
 %doc samples-odbc
@@ -151,6 +151,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Thu Jul 09 2020 Cory McIntire <cory@cpanel.net> - 1.2.3-1
+- EA-9148: Update ea-freetds from v1.1.24 to v1.2.3
+
 * Wed Jan 22 2020 Tim Mullin <tim@cpanel.net> - 1.1.24-1
 - EA-8839: Update to version 1.1.24 and make libtdsodbc.so available
 
