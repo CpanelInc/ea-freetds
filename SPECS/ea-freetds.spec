@@ -19,6 +19,13 @@ URL: http://www.freetds.org/2
 # From https://www.freetds.org/files/stable/freetds-%{version}.tar.gz
 Source0: freetds-%{version}.tar.gz
 
+%if 0%{rhel} < 7
+BuildRequires: devtoolset-7-toolchain
+BuildRequires: devtoolset-7-libatomic-devel
+BuildRequires: devtoolset-7-gcc
+BuildRequires: devtoolset-7-gcc-c++
+%endif
+
 %if %{__isa_bits} == 64
 Provides: libsybdb.so.5()(64bit)
 %else
@@ -78,6 +85,9 @@ If you like to develop programs using %{name}, you will need to install
 %setup -q -n freetds-%{version}
 
 %build
+%if 0%{?rhel} < 7
+. /opt/rh/devtoolset-7/enable
+%endif
 
 %configure \
         --prefix=/opt/cpanel/freetds \
