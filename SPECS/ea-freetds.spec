@@ -4,7 +4,7 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.2.9
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -34,8 +34,19 @@ Provides: libsybdb.so.5
 BuildRequires: unixODBC-devel, readline-devel
 BuildRequires: libtool
 BuildRequires: doxygen, docbook-style-dsssl
+
+%if 0%{rhel} < 7
 BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 Requires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
+%else
+#
+# We made a conscious decision to only use system openssl on C8.
+# See design doc:
+# https://enterprise.cpanel.net/projects/EA4/repos/ea-openssl11/DESIGN.md
+# 
+BuildRequires: openssl, openssl-devel, libtasn1, libtasn1-devel
+Requires: openssl, openssl-devel, libtasn1, libtasn1-devel
+%endif
 
 Requires: %{name}-libs%{?_isa} = %{version}-%{release}
 
@@ -100,9 +111,13 @@ If you like to develop programs using %{name}, you will need to install
         --sysconfdir=/opt/cpanel/freetds/etc \
         --enable-msdblib \
         --with-gnu-ld \
-	--with-unixodbc="%{_prefix}" \
+        -with-unixodbc="%{_prefix}" \
+%if 0%{?rhel} < 7
         --with-openssl=/opt/cpanel/ea-openssl11 \
         LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib}"
+%else
+        --with-openssl
+%endif
 
 make %{?_smp_mflags} DOCBOOK_DSL="`rpm -ql docbook-style-dsssl | fgrep html/docbook.dsl`"
 
@@ -161,6 +176,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Tue Nov 24 2020 Julian Brown <julian.brown@cpanel.net> - 1.2.9-2
+- ZC-8005: Replace ea-openssl11 with system openssl on C8
+
 * Tue Nov 03 2020 Cory McIntire <cory@cpanel.net> - 1.2.9-1
 - EA-9397: Update ea-freetds from v1.2.5 to v1.2.9
 
