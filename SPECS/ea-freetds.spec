@@ -35,7 +35,7 @@ BuildRequires: unixODBC-devel, readline-devel
 BuildRequires: libtool
 BuildRequires: doxygen, docbook-style-dsssl
 
-%if 0%{rhel} < 7
+%if 0%{rhel} < 8
 BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 Requires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 %else
@@ -112,7 +112,7 @@ If you like to develop programs using %{name}, you will need to install
         --enable-msdblib \
         --with-gnu-ld \
         -with-unixodbc="%{_prefix}" \
-%if 0%{?rhel} < 7
+%if 0%{?rhel} < 8
         --with-openssl=/opt/cpanel/ea-openssl11 \
         LDFLAGS="-Wl,-rpath=/opt/cpanel/ea-openssl11/%{_lib}"
 %else
