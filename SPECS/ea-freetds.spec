@@ -39,11 +39,7 @@ BuildRequires: doxygen, docbook-style-dsssl
 BuildRequires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 Requires: ea-openssl11 >= %{ea_openssl_ver}, ea-openssl11-devel >= %{ea_openssl_ver}, libtasn1, libtasn1-devel
 %else
-#
-# We made a conscious decision to only use system openssl on C8.
-# See design doc:
-# https://enterprise.cpanel.net/projects/EA4/repos/ea-openssl11/DESIGN.md
-# 
+# In C8 we use system openssl. See DESIGN.md in ea-openssl11 git repo for details
 BuildRequires: openssl, openssl-devel, libtasn1, libtasn1-devel
 Requires: openssl, openssl-devel, libtasn1, libtasn1-devel
 %endif
