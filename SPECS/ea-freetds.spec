@@ -4,9 +4,9 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.3.3
+Version: 1.3.4
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 2
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
@@ -174,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon Dec 13 2021 Cory McIntire <cory@cpanel.net> - 1.3.4-1
+- EA-10350: Update ea-freetds from v1.3.3 to v1.3.4
+
 * Mon Sep 13 2021 Julian Brown <julian.brown@cpanel.net> - 1.3.3-2
 - ZC-8921: ZC-8921: Do not build debug information
 
