@@ -6,15 +6,12 @@ Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.3.9
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 Vendor: cPanel, Inc.
 Group: System Environment/Libraries
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
-
-# do not produce debuginfo package
-%define debug_package %{nil}
 
 %define _docdir /opt/cpanel/freetds/share/doc/freetds
 
@@ -174,6 +171,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Mon May 08 2023 Julian Brown <julian.brown@cpanel.net> - 1.3.9-2
+- ZC-10936: Clean up Makefile and remove debug-package-nil
+
 * Mon Feb 14 2022 Cory McIntire <cory@cpanel.net> - 1.3.9-1
 - EA-10495: Update ea-freetds from v1.3.8 to v1.3.9
 
