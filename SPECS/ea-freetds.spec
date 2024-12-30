@@ -4,7 +4,7 @@
 
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.3.9
+Version: 1.4.9
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -12,9 +12,6 @@ Vendor: cPanel, Inc.
 Group: System Environment/Libraries
 License: LGPLv2+ and GPLv2+
 URL: http://www.freetds.org/2
-
-# do not produce debuginfo package
-%define debug_package %{nil}
 
 %define _docdir /opt/cpanel/freetds/share/doc/freetds
 
@@ -147,7 +144,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 /opt/cpanel/freetds/bin/*
-%doc AUTHORS.md BUGS.md COPYING.txt NEWS.md README.md TODO.md doc/*.html
+%doc AUTHORS.md COPYING.txt NEWS.md README.md TODO.md doc/*.html
 %doc %{_docdir}/userguide
 %doc %{_docdir}/images
 /opt/cpanel/freetds/man/man1/*
@@ -174,6 +171,27 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sun Dec 03 2023 Cory McIntire <cory@cpanel.net> - 1.4.9-1
+- EA-11840: Update ea-freetds from v1.4.6 to v1.4.9
+
+* Fri Oct 27 2023 Cory McIntire <cory@cpanel.net> - 1.4.6-1
+- EA-11775: Update ea-freetds from v1.4.5 to v1.4.6
+
+* Mon Oct 23 2023 Cory McIntire <cory@cpanel.net> - 1.4.5-1
+- EA-11760: Update ea-freetds from v1.4.4 to v1.4.5
+
+* Fri Oct 20 2023 Cory McIntire <cory@cpanel.net> - 1.4.4-1
+- EA-11759: Update ea-freetds from v1.4.3 to v1.4.4
+
+* Mon Oct 16 2023 Cory McIntire <cory@cpanel.net> - 1.4.3-1
+- EA-11745: Update ea-freetds from v1.4.2 to v1.4.3
+
+* Mon Oct 02 2023 Cory McIntire <cory@cpanel.net> - 1.4.2-1
+- EA-11714: Update ea-freetds from v1.3.9 to v1.4.2
+
+* Mon May 08 2023 Julian Brown <julian.brown@cpanel.net> - 1.3.9-2
+- ZC-10936: Clean up Makefile and remove debug-package-nil
+
 * Mon Feb 14 2022 Cory McIntire <cory@cpanel.net> - 1.3.9-1
 - EA-10495: Update ea-freetds from v1.3.8 to v1.3.9
 
