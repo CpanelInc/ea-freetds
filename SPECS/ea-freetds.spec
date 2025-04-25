@@ -2,6 +2,11 @@
 
 %define ea_openssl_ver 1.1.1d-1
 
+%if 0%{rhel} >= 10
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_brp_buildroot_policy_scripts
+%global __brp_check_rpaths %{nil}
+%endif
+
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
 Version: 1.4.9
@@ -23,6 +28,10 @@ BuildRequires: devtoolset-7-toolchain
 BuildRequires: devtoolset-7-libatomic-devel
 BuildRequires: devtoolset-7-gcc
 BuildRequires: devtoolset-7-gcc-c++
+%endif
+
+%if 0%{rhel} >= 10
+BuildRequires: langpacks-fonts-en
 %endif
 
 %if %{__isa_bits} == 64
