@@ -2,9 +2,14 @@
 
 %define ea_openssl_ver 1.1.1d-1
 
+%if 0%{rhel} >= 10
+# https://docs.fedoraproject.org/en-US/packaging-guidelines/#_brp_buildroot_policy_scripts
+%global __brp_check_rpaths %{nil}
+%endif
+
 Name: ea-freetds
 Summary: Implementation of the TDS (Tabular DataStream) protocol
-Version: 1.5.1
+Version: 1.5.2
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4544 for more details
 %define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
@@ -23,6 +28,10 @@ BuildRequires: devtoolset-7-toolchain
 BuildRequires: devtoolset-7-libatomic-devel
 BuildRequires: devtoolset-7-gcc
 BuildRequires: devtoolset-7-gcc-c++
+%endif
+
+%if 0%{rhel} >= 10
+BuildRequires: langpacks-fonts-en
 %endif
 
 %if %{__isa_bits} == 64
@@ -171,6 +180,9 @@ rm -rf $RPM_BUILD_ROOT
 
 
 %changelog
+* Sat May 31 2025 Cory McIntire <cory.mcintire@webpros.com> - 1.5.2-1
+- EA-12900: Update ea-freetds from v1.5.1 to v1.5.2
+
 * Thu Apr 24 2025 Cory McIntire <cory.mcintire@webpros.com> - 1.5.1-1
 - EA-12830: Update ea-freetds from v1.4.9 to v1.5.1
 
